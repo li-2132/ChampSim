@@ -579,12 +579,12 @@ bool train_inference_flag = 0;
 // ************************************************ //
 // This part give the Champsim-related fuinctions, including the Amphi's design
 // ******** Champsim Prefetch Functions ********** //
-void CACHE::prefetcher_initialize() 
+void prefetcher_initialize() 
 {
 
 }
 
-uint32_t CACHE::prefetcher_cache_operate(champsim::address addr, champsim::address ip, uint8_t cache_hit, bool useful_prefetch, access_type type,
+uint32_t prefetcher_cache_operate(champsim::address addr, champsim::address ip, uint8_t cache_hit, bool useful_prefetch, access_type type,
                                     uint32_t metadata_in)
 {
     std::uint64_t cl_addr = addr >> LOG2_BLOCK_SIZE;
@@ -695,11 +695,11 @@ uint32_t CACHE::prefetcher_cache_operate(champsim::address addr, champsim::addre
                 int output_value = outputs[0].value*1 + outputs[1].value*2 + outputs[2].value*4 + outputs[3].value*8;
                 Int4 pred_embed(output_value);
                 std::uint64_t pred_delta = HMT.find_by_second(pred_embed);
-                prefetch_line(ip, addr, addr + (pred_delta << LOG2_BLOCK_SIZE), true, 0);
-                prefetch_line(ip, addr, addr + (pred_delta + 1<< LOG2_BLOCK_SIZE), true, 0);
-                prefetch_line(ip, addr, addr + (pred_delta - 1 << LOG2_BLOCK_SIZE), true, 0);
-                prefetch_line(ip, addr, addr + (pred_delta + 2 << LOG2_BLOCK_SIZE), true, 0);
-                prefetch_line(ip, addr, addr + (pred_delta - 2 << LOG2_BLOCK_SIZE), true, 0);
+                prefetch_line(champsim::address{addr + (pred_delta << LOG2_BLOCK_SIZE)}, true, metadata_in);
+                prefetch_line(champsim::address{addr + (pred_delta + 1<< LOG2_BLOCK_SIZE)}, true, metadata_in);
+                prefetch_line(champsim::address{addr + (pred_delta - 1 << LOG2_BLOCK_SIZE)}, true, metadata_in);
+                prefetch_line(champsim::address{addr + (pred_delta + 2 << LOG2_BLOCK_SIZE)}, true, metadata_in);
+                prefetch_line(champsim::address{addr + (pred_delta - 2 << LOG2_BLOCK_SIZE)}, true, metadata_in);
             }
             else {
                 int output1 = outputs[0].value*1 + outputs[1].value*2 + outputs[2].value*4 + outputs[3].value*8;
@@ -717,19 +717,19 @@ uint32_t CACHE::prefetcher_cache_operate(champsim::address addr, champsim::addre
                 std::uint64_t pred_delta3 = HMT.find_by_second(pred_embed3);
                 std::uint64_t pred_delta4 = HMT.find_by_second(pred_embed4);
 
-                prefetch_line(ip, addr, addr + (pred_delta1 << LOG2_BLOCK_SIZE), true, 0);
+                prefetch_line(champsim::address{addr + (pred_delta1 << LOG2_BLOCK_SIZE)}, true, metadata_in);
                 // prefetch_line(ip, addr, addr + (pred_delta1 + 1<< LOG2_BLOCK_SIZE), true, 0);
                 // prefetch_line(ip, addr, addr + (pred_delta1 - 1 << LOG2_BLOCK_SIZE), true, 0);
                 
-                prefetch_line(ip, addr, addr + (pred_delta2 << LOG2_BLOCK_SIZE), true, 0);
+                prefetch_line(champsim::address{addr + (pred_delta2 << LOG2_BLOCK_SIZE)}, true, metadata_in);
                 // prefetch_line(ip, addr, addr + (pred_delta2 + 1<< LOG2_BLOCK_SIZE), true, 0);
                 // prefetch_line(ip, addr, addr + (pred_delta2 - 1 << LOG2_BLOCK_SIZE), true, 0);
 
-                prefetch_line(ip, addr, addr + (pred_delta3 << LOG2_BLOCK_SIZE), true, 0);
+                prefetch_line(champsim::address{addr + (pred_delta3 << LOG2_BLOCK_SIZE)}, true, metadata_in);
                 // prefetch_line(ip, addr, addr + (pred_delta3 + 1<< LOG2_BLOCK_SIZE), true, 0);
                 // prefetch_line(ip, addr, addr + (pred_delta3 - 1 << LOG2_BLOCK_SIZE), true, 0);
 
-                prefetch_line(ip, addr, addr + (pred_delta4 << LOG2_BLOCK_SIZE), true, 0);
+                prefetch_line(champsim::address{addr + (pred_delta4 << LOG2_BLOCK_SIZE)}, true, metadata_in);
                 // prefetch_line(ip, addr, addr + (pred_delta4 + 1<< LOG2_BLOCK_SIZE), true, 0);
                 // prefetch_line(ip, addr, addr + (pred_delta4 - 1 << LOG2_BLOCK_SIZE), true, 0);
             }
@@ -739,12 +739,12 @@ uint32_t CACHE::prefetcher_cache_operate(champsim::address addr, champsim::addre
     return metadata_in; 
 }
 
-uint32_t CACHE::prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint32_t metadata_in)
+uint32_t prefetcher_cache_fill(champsim::address addr, long set, long way, uint8_t prefetch, champsim::address evicted_addr, uint32_t metadata_in)
 {
     return metadata_in;
 }
 
-void CACHE::prefetcher_cycle_operate() {}
+// void CACHE::prefetcher_cycle_operate() {}
 
-void CACHE::prefetcher_final_stats() {}
+// void CACHE::prefetcher_final_stats() {}
 // ************************************************ //
